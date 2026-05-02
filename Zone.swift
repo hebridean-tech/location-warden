@@ -23,12 +23,18 @@ struct LocationEvent: Codable {
     let lat: Double?
     let long: Double?
 
-    init(zoneName: String, event: String, lat: Double? = nil, long: Double? = nil) {
-        self.device_id = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+    init(zoneName: String, event: String, lat: Double? = nil, long: Double? = nil, deviceID: String = Zone.deviceID) {
+        self.device_id = deviceID
         self.zone_name = zoneName
         self.event = event
         self.timestamp = ISO8601DateFormatter().string(from: Date())
         self.lat = lat
         self.long = long
+    }
+}
+
+extension Zone {
+    static var deviceID: String {
+        UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
     }
 }

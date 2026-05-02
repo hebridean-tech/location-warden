@@ -1,4 +1,4 @@
-# Handoff for Mila: finish the Location Warden iOS app on macOS
+# Handoff for GLaDOS: finish the Location Warden iOS app on macOS
 
 ## Goal
 Create a working iOS app project in Xcode for **Location Warden**, using the already-written Swift source files in this workspace, and get it buildable/runnable on Zoe's iPhone.
@@ -37,7 +37,7 @@ There is also a human instruction doc at:
 - Monitors geofences in background
 - Sends enter/exit events to `/location/event`
 
-## What Mila should do
+## What GLaDOS should do
 1. Create a fresh **iOS App** Xcode project named `LocationWarden`
 2. Import the above Swift files into the project
 3. Fix compile issues and project structure issues
@@ -56,7 +56,7 @@ There is also a human instruction doc at:
 8. If needed, adjust code to satisfy current Xcode / iOS SDK requirements
 9. Leave the finished Xcode project somewhere obvious on the Mac and tell Zoe where it is
 
-## Known code caveats Mila may need to fix
+## Known code caveats GLaDOS may need to fix
 The Swift files were generated remotely and may need cleanup. Likely issues:
 - `UIDevice.current.identifierForVendor` may require `import UIKit`
 - `Map` API / annotation usage may need updating for the current SwiftUI/MapKit version
@@ -70,7 +70,7 @@ The Swift files were generated remotely and may need cleanup. Likely issues:
 - Health endpoint is confirmed working externally
 
 ## Success criteria
-Mila is done when:
+GLaDOS is done when:
 - The Xcode project opens cleanly
 - The app builds successfully
 - Zoe can run it on iPhone
@@ -78,7 +78,7 @@ Mila is done when:
 - The project no longer depends on the broken generated `.xcodeproj`
 
 ## Nice-to-have
-If time permits, Mila can also:
+If time permits, GLaDOS can also:
 - make the zone placement UX nicer
 - improve error states / connection messaging
 - make server URL configurable in one obvious place

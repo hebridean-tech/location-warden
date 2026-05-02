@@ -22,11 +22,35 @@ struct ContentView: View {
                             .foregroundColor(.secondary)
                     }
 
+                    LabeledContent("Device ID", value: locationManager.deviceID)
+                        .font(.caption)
+                    LabeledContent("Last coordinate", value: locationManager.lastKnownCoordinate)
+                        .font(.caption)
+                    LabeledContent("Post status", value: locationManager.lastPostStatus)
+                        .font(.caption)
+                    LabeledContent("Monitoring", value: locationManager.monitoredRegionNames.isEmpty ? "No regions" : locationManager.monitoredRegionNames.joined(separator: ", "))
+                        .font(.caption)
+
+                    if let currentZone = locationManager.currentZone {
+                        Text("Current zone: \(currentZone)")
+                            .font(.subheadline)
+                    }
+
                     if locationManager.lastEvent != "None" {
                         Text(locationManager.lastEvent)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
+
+                    Button(locationManager.isSyncingCurrentZone ? "Syncing…" : "Sync current location") {
+                        locationManager.syncCurrentZone()
+                    }
+                    .disabled(locationManager.isSyncingCurrentZone || !isConnected)
+
+                    Button("Send test event") {
+                        locationManager.sendTestEvent()
+                    }
+                    .disabled(!isConnected)
                 }
 
                 Section("Monitored Zones (\(zones.count))") {
