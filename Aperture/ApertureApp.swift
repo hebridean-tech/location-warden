@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct LocationWardenApp: App {
+struct ApertureApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

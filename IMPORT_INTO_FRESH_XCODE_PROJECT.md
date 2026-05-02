@@ -1,6 +1,6 @@
 # Fix for the broken `.xcodeproj`
 
-The generated Xcode project file is malformed. Do **not** use the existing `LocationWarden.xcodeproj`.
+The generated Xcode project file is malformed. Do **not** use the existing `Aperture.xcodeproj`.
 
 ## Do this instead
 
@@ -8,7 +8,7 @@ The generated Xcode project file is malformed. Do **not** use the existing `Loca
 2. **File → New → Project…**
 3. Choose **iOS → App**
 4. Set:
-   - **Product Name:** `LocationWarden`
+   - **Product Name:** `Aperture`
    - **Interface:** `SwiftUI`
    - **Language:** `Swift`
    - **Use Core Data:** off
@@ -19,26 +19,26 @@ The generated Xcode project file is malformed. Do **not** use the existing `Loca
 
 Copy these files from the OpenClaw-generated source bundle into the new Xcode project:
 
-- `LocationWarden/LocationWardenApp.swift`
-- `LocationWarden/Models/Zone.swift`
-- `LocationWarden/Services/API.swift`
-- `LocationWarden/Services/LocationManager.swift`
-- `LocationWarden/Views/ContentView.swift`
-- `LocationWarden/Views/AddZoneView.swift`
+- `Aperture/ApertureApp.swift`
+- `Aperture/Models/Zone.swift`
+- `Aperture/Services/API.swift`
+- `Aperture/Services/LocationManager.swift`
+- `Aperture/Views/ContentView.swift`
+- `Aperture/Views/AddZoneView.swift`
 
 Source folder in workspace:
-- `projects/location-warden/ios-app/LocationWarden/`
+- `projects/location-warden/ios-app/Aperture/`
 
 ## In Xcode
 
 When dragging files in:
 - check **Copy items if needed**
-- check the **LocationWarden** app target
+- check the **Aperture** app target
 
 ## Delete/replace in the fresh project
 
 - Replace the default `ContentView.swift`
-- Replace the default `LocationWardenApp.swift`
+- Replace the default `ApertureApp.swift`
 - Add `Models` / `Services` / `Views` groups if you want organization
 
 ## Required project settings

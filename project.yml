@@ -1,4 +1,4 @@
-name: LocationWarden
+name: Aperture
 options:
   bundleIdPrefix: com.zoehebbard
   deploymentTarget:
@@ -12,14 +12,14 @@ settings:
     DEVELOPMENT_TEAM: ""
 
 targets:
-  LocationWarden:
+  Aperture:
     type: application
     platform: iOS
     sources:
-      - path: LocationWarden
+      - path: Aperture
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.zoehebbard.LocationWarden
+        PRODUCT_BUNDLE_IDENTIFIER: com.zoehebbard.Aperture
         GENERATE_INFOPLIST_FILE: "YES"
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
@@ -28,12 +28,12 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
         INFOPLIST_KEY_UILaunchStoryboardName: LaunchScreen
-        INFOPLIST_FILE: LocationWarden/Info.plist
+        INFOPLIST_FILE: Aperture/Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1"
         ENABLE_PREVIEWS: "YES"
         SWIFT_EMIT_LOC_STRINGS: "YES"
         CODE_SIGN_STYLE: Automatic
     entitlements:
-      path: LocationWarden/LocationWarden.entitlements
+      path: Aperture/Aperture.entitlements
     dependencies: []

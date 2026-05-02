@@ -1,4 +1,5 @@
 import Foundation
+import CoreLocation
 
 class API {
     static let shared = API()
@@ -47,6 +48,10 @@ class API {
     }
 
     func createZone(_ zone: Zone, completion: @escaping (Bool) -> Void) {
+        saveZone(zone, completion: completion)
+    }
+
+    func saveZone(_ zone: Zone, completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: "\(baseURL)/location/zones") else { return }
         var req = URLRequest(url: url)
         req.httpMethod = "POST"
@@ -70,12 +75,36 @@ class API {
         }.resume()
     }
 
-    func sendEvent(_ event: LocationEvent) {
-        guard let url = URL(string: "\(baseURL)/location/event") else { return }
+    func sendEvent(_ event: LocationEvent, completion: ((Bool) -> Void)? = nil) {
+        guard let url = URL(string: "\(baseURL)/location/event") else {
+            completion?(false)
+            return
+        }
         var req = URLRequest(url: url)
         req.httpMethod = "POST"
         headers().forEach { req.setValue($1, forHTTPHeaderField: $0) }
         req.httpBody = try? JSONEncoder().encode(event)
-        URLSession.shared.dataTask(with: req).resume()
+        URLSession.shared.dataTask(with: req) { _, response, _ in
+            let success = (response as? HTTPURLResponse)?.statusCode == 200
+            DispatchQueue.main.async { completion?(success) }
+        }.resume()
+    }
+
+    func syncCurrentZone(from location: CLLocationCoordinate2D, zones: [Zone], completion: @escaping (String?) -> Void) {
+        let matchingZone = zones.first { zone in
+            let zoneLocation = CLLocation(latitude: zone.lat, longitude: zone.long)
+            let currentLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
+            return currentLocation.distance(from: zoneLocation) <= zone.radius
+        }
+
+        guard let zone = matchingZone else {
+            completion(nil)
+            return
+        }
+
+        let event = LocationEvent(zoneName: zone.name, event: "enter", lat: location.latitude, long: location.longitude)
+        sendEvent(event) { success in
+            completion(success ? zone.name : nil)
+        }
     }
 }

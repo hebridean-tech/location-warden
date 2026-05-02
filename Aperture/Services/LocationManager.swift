@@ -87,7 +87,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
-        print("[Location Warden] Monitoring failed for \(region?.identifier ?? "unknown"): \(error)")
+        print("[Aperture] Monitoring failed for \(region?.identifier ?? "unknown"): \(error)")
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -105,7 +105,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("[Location Warden] Location request failed: \(error)")
+        print("[Aperture] Location request failed: \(error)")
         lastPostStatus = "Location request failed: \(error.localizedDescription)"
         isSyncingCurrentZone = false
     }

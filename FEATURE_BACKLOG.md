@@ -1,4 +1,4 @@
-# Location Warden Feature Backlog
+# Aperture Feature Backlog
 
 ## Priority legend
 - **P0** = required foundation
@@ -177,6 +177,7 @@ The app becomes annoying if location setup feels clumsy.
 - map interaction feels acceptable
 - editing a zone does not require awkward recreation
 - zone settings include agent alert configuration
+- radius is previewed live on the map during setup/editing
 
 ---
 

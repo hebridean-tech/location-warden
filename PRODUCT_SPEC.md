@@ -1,8 +1,8 @@
-# Location Warden Product Spec
+# Aperture Product Spec
 
 ## Product summary
 
-Location Warden is a private iPhone app that acts as Zoe's OpenClaw mobile companion.
+Aperture is a private iPhone app that acts as Zoe's OpenClaw mobile companion.
 
 It combines:
 - presence and location awareness
@@ -22,7 +22,7 @@ It should feel like a trusted personal control surface for Rune, Ivy, GLaDOS, an
 
 ## Non-goals
 
-At least for early versions, Location Warden is not:
+At least for early versions, Aperture is not:
 - a full maps app
 - a social location-sharing app
 - a generic team chat app

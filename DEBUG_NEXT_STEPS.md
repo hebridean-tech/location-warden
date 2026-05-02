@@ -1,4 +1,4 @@
-# Location Warden debug next steps
+# Aperture debug next steps
 
 ## What was added
 The app source now exposes more presence/debug information in the main status screen:

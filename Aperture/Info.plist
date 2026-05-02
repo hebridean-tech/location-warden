@@ -5,9 +5,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location Warden uses your location to trigger workout and schedule automations.</string>
+	<string>Aperture uses your location to trigger workout, schedule, and agent automations.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Location Warden uses your location to trigger workout and schedule automations.</string>
+	<string>Aperture uses your location to trigger workout, schedule, and agent automations.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

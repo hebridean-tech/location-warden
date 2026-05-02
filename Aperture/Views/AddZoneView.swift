@@ -3,7 +3,8 @@ import MapKit
 import CoreLocation
 
 struct AddZoneView: View {
-    let onAdd: (Zone) -> Void
+    let existingZone: Zone?
+    let onSave: (Zone) -> Void
     @Environment(\.dismiss) private var dismiss
 
     @State private var name = ""
@@ -15,7 +16,6 @@ struct AddZoneView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Map with crosshair overlay
                 ZStack(alignment: .center) {
                     Map(position: $position) {
                         if let pin = pinLocation {
@@ -30,7 +30,6 @@ struct AddZoneView: View {
                         UserAnnotation()
                     }
 
-                    // Crosshair
                     if pinLocation == nil {
                         Image(systemName: "crosshair")
                             .font(.system(size: 32, weight: .bold))
@@ -46,13 +45,11 @@ struct AddZoneView: View {
                     }
                 }
 
-                // Coordinates display
                 Text(String(format: "%.4f, %.4f", pinLocation?.latitude ?? coordinate.latitude, pinLocation?.longitude ?? coordinate.longitude))
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .padding(.top, 8)
 
-                // Form fields below map
                 Form {
                     Section("Zone") {
                         TextField("Name (e.g. Gym)", text: $name)
@@ -74,24 +71,31 @@ struct AddZoneView: View {
                             .foregroundColor(.orange)
                         }
 
-                        Button("Add Zone") {
+                        Button(existingZone == nil ? "Add Zone" : "Save Zone") {
                             let finalCoord = pinLocation ?? coordinate
                             let zone = Zone(name: name, lat: finalCoord.latitude, long: finalCoord.longitude, radius: radius)
-                            onAdd(zone)
+                            onSave(zone)
                             dismiss()
                         }
                         .disabled(name.isEmpty || pinLocation == nil)
                     }
                 }
             }
-            .navigationTitle("Add Zone")
+            .navigationTitle(existingZone == nil ? "Add Zone" : "Edit Zone")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
                 }
             }
             .onAppear {
-                if let loc = CLLocationManager().location?.coordinate {
+                if let existingZone {
+                    let existingCoordinate = CLLocationCoordinate2D(latitude: existingZone.lat, longitude: existingZone.long)
+                    name = existingZone.name
+                    radius = existingZone.radius
+                    coordinate = existingCoordinate
+                    pinLocation = existingCoordinate
+                    position = .camera(MapCamera(centerCoordinate: existingCoordinate, distance: max(radius * 4, 500)))
+                } else if let loc = CLLocationManager().location?.coordinate {
                     coordinate = loc
                     position = .camera(MapCamera(centerCoordinate: loc, distance: 1200))
                 }

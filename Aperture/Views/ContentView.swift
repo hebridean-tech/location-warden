@@ -4,6 +4,7 @@ struct ContentView: View {
     @StateObject private var locationManager = LocationManager()
     @State private var zones: [Zone] = []
     @State private var showingAddZone = false
+    @State private var editingZone: Zone? = nil
     @State private var isConnected = false
 
     var body: some View {
@@ -60,7 +61,14 @@ struct ContentView: View {
                     }
                     ForEach(zones) { zone in
                         VStack(alignment: .leading) {
-                            Text(zone.name).font(.headline)
+                            HStack {
+                                Text(zone.name).font(.headline)
+                                Spacer()
+                                Button("Edit") {
+                                    editingZone = zone
+                                }
+                                .font(.caption)
+                            }
                             Text(String(format: "%.4f, %.4f — %.0fm", zone.lat, zone.long, zone.radius))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
@@ -76,7 +84,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .navigationTitle("Location Warden")
+            .navigationTitle("Aperture")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button(action: { showingAddZone = true }) {
@@ -85,9 +93,24 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented: $showingAddZone) {
-                AddZoneView { zone in
-                    API.shared.createZone(zone) { success in
+                AddZoneView(existingZone: nil) { zone in
+                    API.shared.saveZone(zone) { success in
                         if success { loadZones() }
+                    }
+                }
+            }
+            .sheet(item: $editingZone) { zone in
+                AddZoneView(existingZone: zone) { updatedZone in
+                    if updatedZone.name != zone.name {
+                        API.shared.deleteZone(name: zone.name) { _ in
+                            API.shared.saveZone(updatedZone) { success in
+                                if success { loadZones() }
+                            }
+                        }
+                    } else {
+                        API.shared.saveZone(updatedZone) { success in
+                            if success { loadZones() }
+                        }
                     }
                 }
             }
