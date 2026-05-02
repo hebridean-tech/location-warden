@@ -1,0 +1,5 @@
+LocationWarden.xcodeproj
+.DS_Store
+DerivedData/
+xcuserdata/
+*.xcscmblueprint
