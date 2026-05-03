@@ -5,8 +5,7 @@ protocol ChatTransport {
     func send(text: String, to agentId: String, completion: @escaping (ChatMessage?) -> Void)
 }
 
-/// Mock transport for V1 development. Returns echo-style responses.
-/// Replace with a real OpenClaw WebSocket/HTTP transport later.
+/// Mock transport kept for fallback/testing.
 class MockChatTransport: ChatTransport {
     func send(text: String, to agentId: String, completion: @escaping (ChatMessage?) -> Void) {
         // Simulate network delay
@@ -37,7 +36,7 @@ class ChatService: ObservableObject {
 
     private let transport: ChatTransport
 
-    init(transport: ChatTransport = MockChatTransport()) {
+    init(transport: ChatTransport = RealChatTransport()) {
         self.transport = transport
         loadMessages()
     }

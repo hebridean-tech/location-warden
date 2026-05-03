@@ -4,48 +4,44 @@
 
 A dedicated chat tab in Aperture for messaging Rune directly, separate from the location/status tab.
 
-## In scope (V1)
+## Current status
 
-- Separate "Rune" tab in the tab bar
-- Single conversation thread with Rune
-- Message input field + send button
-- Scrollable message history (user & Rune bubbles)
-- Message persistence via UserDefaults (survives app restart)
-- Mock transport that returns placeholder replies (staged for real backend swap)
-- Clean architecture: `ChatTransport` protocol, `ChatService` class, `ChatMessage` model — all designed for later multi-agent expansion
+### Real (V1.1)
+- **Real HTTP transport** — app sends messages via `POST /chat/send` to the Aperture backend
+- **Backend chat API** — three new endpoints on Failsafe:
+  - `POST /chat/send` — stores user message + appends to `chat_pending.jsonl` for OpenClaw pickup
+  - `GET /chat/messages/{device_id}?since=<epoch>&limit=N` — fetches messages (user + agent)
+  - `POST /chat/reply?device_id=...&text=...` — stores an agent reply (for OpenClaw or external tools)
+- **Reply polling** — app polls for agent replies with exponential backoff (1s → 8s, up to ~15s total), then shows a fallback message
+- **SQLite persistence** on backend — `chat_messages` table with device/thread isolation
+- Message persistence on app via UserDefaults (unchanged)
 
-## Intentionally out of scope (V1)
+### Staged (not yet wired)
+- **OpenClaw session injection** — `chat_pending.jsonl` is written but no OpenClaw cron/heartbeat consumer reads it yet. Next step: a watcher that reads pending messages, injects them into an OpenClaw session, and calls `POST /chat/reply` with the response.
+- **Push notifications** — app still polls; WebSocket or push not yet implemented
+- **Multiple agents** — model supports `agentId` but UI is Rune-only
 
-- Real OpenClaw backend transport (WebSocket / HTTP polling) — swap `MockChatTransport` for a real implementation
-- Multiple agent threads — the model supports it (`agentId` field, `AgentIdentity` struct) but UI shows only Rune for now
-- Push notifications for new messages
-- Rich content (images, voice, action cards)
-- Message search or history management UI
-- Streaming/typing indicators
-
-## Architecture notes
-
+### Architecture
 ```
-ChatTransport (protocol)  ← swap mock for real
-  └── MockChatTransport   ← V1 placeholder
-  └── (future: OpenClawChatTransport)
-
-ChatService (ObservableObject, @MainActor)
-  └── messages: [ChatMessage]
-  └── send(_:) → transport.send → appends reply
-  └── UserDefaults persistence (keyed per agent thread)
-
-ChatView
-  └── ScrollView + LazyVStack of MessageBubble
-  └── Input bar with TextField + send button
-
-ContentView (TabView)
-  ├── Location tab → LocationView (existing)
-  └── Rune tab → ChatView (new)
+App (iOS)                         Backend (Failsafe)              OpenClaw (Rune)
+  │                                   │                              │
+  ├─ POST /chat/send ──────────────►  │                              │
+  │                                   ├─ INSERT chat_messages         │
+  │                                   ├─ APPEND chat_pending.jsonl ──►│ (staged)
+  │                                   │                              │
+  ├─ GET /chat/messages?since=... ──► │                              │
+  │   (poll every 1-8s)               │                              │
+  │                                   │◄── POST /chat/reply ────────┤ (staged)
+  │◄── [{id, text, is_from_user}] ───┤                              │
+  │                                   │                              │
 ```
+
+## Transport classes
+- `ChatTransport` (protocol) — swap point
+- `RealChatTransport` — default, talks to backend via HTTP
+- `MockChatTransport` — kept for offline/testing fallback
 
 ## Next steps
-
-1. Implement `OpenClawChatTransport` that talks to a real backend endpoint
+1. Wire an OpenClaw consumer for `chat_pending.jsonl` → inject into session → POST /chat/reply
 2. Add per-agent tab or conversation picker (LW-016)
 3. Wire zone-based alerts into the chat (LW-014)
