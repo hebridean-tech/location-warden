@@ -3,6 +3,7 @@ import SwiftUI
 struct ChatView: View {
     @StateObject private var chat = ChatService.shared
     @State private var inputText = ""
+    @FocusState private var isInputFocused: Bool
 
     var body: some View {
         VStack(spacing: 0) {
@@ -36,6 +37,9 @@ struct ChatView: View {
                     }
                 }
             }
+            .onTapGesture {
+                isInputFocused = false
+            }
 
             Divider()
 
@@ -63,6 +67,7 @@ struct ChatView: View {
                 TextField("Message Rune…", text: $inputText, axis: .vertical)
                     .textFieldStyle(.plain)
                     .lineLimit(1...5)
+                    .focused($isInputFocused)
                     .onSubmit { send() }
 
                 Button(action: send) {
@@ -77,13 +82,13 @@ struct ChatView: View {
             .background(.bar)
         }
         .navigationTitle("Rune")
-        .scrollDismissesKeyboard(.interactively)
     }
 
     private func send() {
         let text = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else { return }
         inputText = ""
+        isInputFocused = false
         chat.send(text)
     }
 }
