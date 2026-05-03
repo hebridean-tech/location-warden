@@ -90,7 +90,7 @@ class API {
         }.resume()
     }
 
-    func syncCurrentZone(from location: CLLocationCoordinate2D, zones: [Zone], completion: @escaping (String?) -> Void) {
+    func syncCurrentZone(from location: CLLocationCoordinate2D, zones: [Zone], previousZone: String?, completion: @escaping (String?, Bool) -> Void) {
         let matchingZone = zones.first { zone in
             let zoneLocation = CLLocation(latitude: zone.lat, longitude: zone.long)
             let currentLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
@@ -98,13 +98,18 @@ class API {
         }
 
         guard let zone = matchingZone else {
-            completion(nil)
+            completion(nil, false)
+            return
+        }
+
+        guard previousZone != zone.name else {
+            completion(zone.name, false)
             return
         }
 
         let event = LocationEvent(zoneName: zone.name, event: "enter", lat: location.latitude, long: location.longitude)
         sendEvent(event) { success in
-            completion(success ? zone.name : nil)
+            completion(success ? zone.name : nil, success)
         }
     }
 }

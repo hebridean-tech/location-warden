@@ -55,7 +55,7 @@ struct AddZoneView: View {
                         TextField("Name (e.g. Gym)", text: $name)
                         VStack(alignment: .leading) {
                             Text("Radius: \(Int(radius))m")
-                            Slider(value: $radius, in: 50...1000, step: 25)
+                            Slider(value: $radius, in: 10...1000, step: 5)
                         }
                     }
 

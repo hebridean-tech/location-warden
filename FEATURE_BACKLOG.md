@@ -178,6 +178,7 @@ The app becomes annoying if location setup feels clumsy.
 - editing a zone does not require awkward recreation
 - zone settings include agent alert configuration
 - radius is previewed live on the map during setup/editing
+- small-radius zones below 50m are supported when needed
 
 ---
 
