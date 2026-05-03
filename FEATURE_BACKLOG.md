@@ -188,6 +188,9 @@ Allow each zone to define whether an agent is alerted, which agent is targeted, 
 **Why**
 Zone behavior should be user-configurable, not hardcoded.
 
+**Dependency**
+Should come after basic in-app agent messaging exists, so alerts have a real delivery model.
+
 **Done when**
 - zone create/edit supports alert toggle
 - user can choose target agent
@@ -198,15 +201,17 @@ Zone behavior should be user-configurable, not hardcoded.
 
 ## P2 - agent app evolution
 
-### LW-015 In-app Rune chat
+### LW-015 In-app Rune chat ✅ V1 implemented
 Add a direct Rune chat thread inside the app.
 
 **Why**
 Begins replacing Telegram for day-to-day agent communication.
 
 **Done when**
-- Zoe can send Rune a message in-app
-- Rune's reply appears in-app
+- Zoe can send Rune a message in-app ✓
+- Rune's reply appears in-app ✓ (mock transport)
+
+**V1 details**: See `Aperture/V1_RUNE_CHAT.md`. Uses `MockChatTransport`; swap for real OpenClaw transport next.
 
 ---
 
@@ -380,11 +385,11 @@ Commute intelligence, lateness detection, and wake timing all depend on knowing 
 12. LW-011 Ivy lateness workflow hook
 
 ### Then
-13. LW-014 Per-zone agent alert settings
-14. LW-015 In-app Rune chat
-15. LW-017 Contextual action cards
-16. LW-018 Push notification pipeline
-17. LW-016 Agent inbox architecture
+13. LW-015 In-app Rune chat
+14. LW-016 Agent inbox architecture
+15. LW-014 Per-zone agent alert settings
+16. LW-017 Contextual action cards
+17. LW-018 Push notification pipeline
 18. LW-027 Ivy late-text workflow
 19. LW-029 Agent push cards
 20. LW-030 In-app command center
@@ -409,11 +414,12 @@ V1 is complete when:
 ## Recommended V2 definition
 
 V2 is complete when:
+- Rune can be messaged in-app
+- basic multi-agent messaging structure exists
 - backend events reach OpenClaw automatically
 - Rune gym workflow works
 - Ivy lateness workflow works
 - per-zone agent alert settings work
-- Rune can be messaged in-app or triggered from app actions
 
 ## Recommended V3 definition
 

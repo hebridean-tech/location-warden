@@ -298,11 +298,13 @@ Build the product in this order:
 1. rock-solid presence and geofencing
 2. current-zone detection and manual sync
 3. Rune chat thread in-app
-4. Ivy lateness and gym workflows
-5. push notifications
-6. multi-agent expansion
-7. trusted-device approvals
-8. spoken agent replies
-9. spoken morning briefing and alarm behavior
+4. basic multi-agent messaging structure
+5. Ivy lateness and gym workflows
+6. per-zone agent alert settings
+7. push notifications
+8. multi-agent expansion
+9. trusted-device approvals
+10. spoken agent replies
+11. spoken morning briefing and alarm behavior
 
 This keeps the app useful early while leaving room for it to become Zoe's real OpenClaw mobile companion.

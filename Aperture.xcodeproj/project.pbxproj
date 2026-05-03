@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA11111100000001AAAAAAAAAA /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11111100000005AAAAAAAAAA /* ChatMessage.swift */; };
+		AA11111100000002AAAAAAAAAA /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11111100000006AAAAAAAAAA /* ChatService.swift */; };
+		AA11111100000003AAAAAAAAAA /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11111100000007AAAAAAAAAA /* ChatView.swift */; };
+		AA11111100000004AAAAAAAAAA /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11111100000008AAAAAAAAAA /* LocationView.swift */; };
 		3395BE51E75F9C3697314016 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49CAF3492F5E84ECFCA73D0 /* ContentView.swift */; };
 		548D7E4D6DFC56FF4D1EBD3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D783BDF03454D58841F054C /* Assets.xcassets */; };
 		8A5FCA961486FC3FD9D3644C /* Zone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A840D54C0353CA0F035D4F6 /* Zone.swift */; };
@@ -17,6 +21,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA11111100000005AAAAAAAAAA /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		AA11111100000006AAAAAAAAAA /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		AA11111100000007AAAAAAAAAA /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		AA11111100000008AAAAAAAAAA /* LocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
 		0D633A3678F317EE7B53746E /* Aperture.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Aperture.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20286694825342F9A89A643A /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		26F1318A3FA68DA9AB5A5CD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -34,6 +42,7 @@
 			isa = PBXGroup;
 			children = (
 				20286694825342F9A89A643A /* API.swift */,
+				AA11111100000006AAAAAAAAAA /* ChatService.swift */,
 				7972286E3DD64C301E21DF12 /* LocationManager.swift */,
 			);
 			path = Services;
@@ -43,7 +52,9 @@
 			isa = PBXGroup;
 			children = (
 				3ABBA65BFFCFFC0F614272A7 /* AddZoneView.swift */,
+				AA11111100000007AAAAAAAAAA /* ChatView.swift */,
 				E49CAF3492F5E84ECFCA73D0 /* ContentView.swift */,
+				AA11111100000008AAAAAAAAAA /* LocationView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -82,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				7A840D54C0353CA0F035D4F6 /* Zone.swift */,
+				AA11111100000005AAAAAAAAAA /* ChatMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -158,9 +170,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC5B8893F4618CE31532BB61 /* API.swift in Sources */,
+				AA11111100000001AAAAAAAAAA /* ChatMessage.swift in Sources */,
+				AA11111100000002AAAAAAAAAA /* ChatService.swift in Sources */,
+				AA11111100000003AAAAAAAAAA /* ChatView.swift in Sources */,
 				EBDDAF18BFE6CF36A2977C26 /* AddZoneView.swift in Sources */,
 				9F2FC905D1DA5669A8B48778 /* ApertureApp.swift in Sources */,
 				3395BE51E75F9C3697314016 /* ContentView.swift in Sources */,
+				AA11111100000004AAAAAAAAAA /* LocationView.swift in Sources */,
 				D51D6DD4FC16B1B23C88BEAD /* LocationManager.swift in Sources */,
 				8A5FCA961486FC3FD9D3644C /* Zone.swift in Sources */,
 			);
