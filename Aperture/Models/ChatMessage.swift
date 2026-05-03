@@ -7,6 +7,12 @@ struct ChatMessage: Identifiable, Codable, Equatable {
     let timestamp: Date
     let isFromUser: Bool
 
+    var formattedTime: String {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        return formatter.string(from: timestamp)
+    }
+
     init(id: UUID = UUID(), agentId: String = "rune", text: String, timestamp: Date = Date(), isFromUser: Bool) {
         self.id = id
         self.agentId = agentId
