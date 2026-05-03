@@ -36,6 +36,15 @@ class ChatService: ObservableObject {
 
     private let transport: ChatTransport
 
+    private static var _eager: ChatService?
+
+    /// Eagerly initialize at app launch so first tab tap is instant.
+    static func warmUp() {
+        if _eager == nil {
+            _eager = shared
+        }
+    }
+
     init(transport: ChatTransport = RealChatTransport()) {
         self.transport = transport
         loadMessages()
