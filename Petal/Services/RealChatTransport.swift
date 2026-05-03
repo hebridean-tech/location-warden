@@ -1,7 +1,6 @@
 import Foundation
 
-/// Direct HTTP transport for Rune chat via OpenClaw /v1/responses proxy.
-/// One HTTP call, one response — no polling, no pending files.
+/// Direct HTTP transport for Raphtalia chat via OpenClaw /v1/responses proxy.
 class RealChatTransport: ChatTransport {
     private let serverURL = "https://arch.projectveritos.com"
     private let deviceID: String
@@ -31,13 +30,12 @@ class RealChatTransport: ChatTransport {
             "stream": false,
         ]
         req.httpBody = try? JSONSerialization.data(withJSONObject: body)
-        req.setValue("aperture-rune", forHTTPHeaderField: "X-OpenClaw-Session-Key")
 
         URLSession.shared.dataTask(with: req) { data, response, error in
             if let error {
-                print("[Aperture] Chat request failed: \(error.localizedDescription)")
+                print("[Raphtalia] Chat request failed: \(error.localizedDescription)")
                 DispatchQueue.main.async {
-                    completion(ChatMessage(text: "Connection failed. Please try again. 🖤", isFromUser: false))
+                    completion(ChatMessage(text: "Connection failed. Please try again. 🥀", isFromUser: false))
                 }
                 return
             }
@@ -46,9 +44,9 @@ class RealChatTransport: ChatTransport {
                   let httpResp = response as? HTTPURLResponse,
                   httpResp.statusCode == 200 else {
                 let code = (response as? HTTPURLResponse)?.statusCode ?? 0
-                print("[Aperture] Chat request returned status \(code)")
+                print("[Raphtalia] Chat request returned status \(code)")
                 DispatchQueue.main.async {
-                    completion(ChatMessage(text: "Failed to get a response (error \(code)). 🖤", isFromUser: false))
+                    completion(ChatMessage(text: "Failed to get a response (error \(code)). 🥀", isFromUser: false))
                 }
                 return
             }
@@ -56,7 +54,7 @@ class RealChatTransport: ChatTransport {
             let replyText = self.extractText(from: data)
             DispatchQueue.main.async {
                 if replyText.isEmpty {
-                    completion(ChatMessage(text: "I received your message but couldn't generate a reply. 🖤", isFromUser: false))
+                    completion(ChatMessage(text: "I received your message but couldn't generate a reply. 🥀", isFromUser: false))
                 } else {
                     completion(ChatMessage(text: replyText, isFromUser: false))
                 }
@@ -67,10 +65,8 @@ class RealChatTransport: ChatTransport {
     // MARK: - Response parsing
 
     private func extractText(from data: Data) -> String {
-        // OpenAI Responses format: { "output": [{ "type": "message", "content": [{ "type": "output_text", "text": "..." }] }] }
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let output = json["output"] as? [[String: Any]] else {
-            // Fallback: maybe raw text
             if let raw = String(data: data, encoding: .utf8) {
                 return raw
             }
