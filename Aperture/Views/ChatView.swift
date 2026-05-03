@@ -28,6 +28,32 @@ struct ChatView: View {
                         withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
                     }
                 }
+                .onAppear {
+                    if let last = chat.messages.last {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
+                        }
+                    }
+                }
+            }
+
+            Divider()
+
+            // Typing indicator
+            if chat.isSending {
+                HStack(spacing: 4) {
+                    ForEach(0..<3, id: \.self) { index in
+                        Circle()
+                            .fill(Color.secondary)
+                            .frame(width: 8, height: 8)
+                            .modifier(PulsingDot(delay: Double(index) * 0.2))
+                    }
+                    Text("Rune is typing…")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.horizontal, 12)
+                .transition(.opacity)
             }
 
             Divider()
@@ -51,6 +77,10 @@ struct ChatView: View {
             .background(.bar)
         }
         .navigationTitle("Rune")
+        .scrollDismissesKeyboard(.interactively)
+        .onTapGesture {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
     }
 
     private func send() {
@@ -58,6 +88,19 @@ struct ChatView: View {
         guard !text.isEmpty else { return }
         inputText = ""
         chat.send(text)
+    }
+}
+
+// MARK: - Typing indicator animation
+struct PulsingDot: ViewModifier {
+    let delay: Double
+    @State private var animating = false
+    func body(content: Content) -> some View {
+        content
+            .opacity(animating ? 0.3 : 1.0)
+            .scaleEffect(animating ? 0.8 : 1.0)
+            .animation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true).delay(delay), value: animating)
+            .onAppear { animating = true }
     }
 }
 
