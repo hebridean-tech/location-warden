@@ -17,9 +17,17 @@ struct ContentView: View {
                 ChatView()
             }
             .tabItem {
-                Label("Rune", systemImage: "bubble.left")
+                Label("Tasks", systemImage: "checklist")
             }
             .tag(1)
+
+            NavigationView {
+                ChatView()
+            }
+            .tabItem {
+                Label("Rune", systemImage: "bubble.left")
+            }
+            .tag(2)
         }
     }
 }
