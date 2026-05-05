@@ -38,7 +38,32 @@ class TaskService: ObservableObject {
     }
 
     func toggleCompleted(_ todo: VeritosTodo) {
-        guard let url = URL(string: "\(baseURL)/my/todos/\(todo.id)") else { return }
+        updateTodo(todoId: todo.id, body: [
+            "completed": !todo.completed,
+            "urgency": todo.urgency,
+            "is_want": todo.isWant ?? false
+        ])
+    }
+
+    func toggleSubtask(todoId: Int, subtask: Subtask) {
+        guard var subtasks = todos.first(where: { $0.id == todoId })?.subtasks else { return }
+
+        // Build the subtasks array with the toggled one
+        let updatedSubtasks: [[String: Any]] = subtasks.map { s in
+            [
+                "id": s.id,
+                "title": s.title,
+                "completed": s.id == subtask.id ? !s.completed : s.completed
+            ]
+        }
+
+        updateTodo(todoId: todoId, body: [
+            "subtasks": updatedSubtasks
+        ])
+    }
+
+    func updateTodo(todoId: Int, body: [String: Any]) {
+        guard let url = URL(string: "\(baseURL)/my/todos/\(todoId)") else { return }
 
         var req = URLRequest(url: url)
         req.httpMethod = "PUT"
@@ -47,11 +72,7 @@ class TaskService: ObservableObject {
         }
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let body: [String: Any] = [
-            "completed": !todo.completed,
-            "urgency": todo.urgency,
-            "is_want": todo.isWant ?? false
-        ]
+        // Merge with existing fields if needed
         req.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
         URLSession.shared.dataTask(with: req) { [weak self] _, _, _ in

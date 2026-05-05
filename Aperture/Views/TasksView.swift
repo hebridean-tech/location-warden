@@ -3,6 +3,7 @@ import SwiftUI
 struct TasksView: View {
     @StateObject private var taskService = TaskService.shared
     @State private var showCompleted = false
+    @State private var selectedTodo: VeritosTodo?
 
     private var activeTasks: [VeritosTodo] {
         taskService.todos.filter { !$0.completed }
@@ -34,8 +35,10 @@ struct TasksView: View {
                 }
 
                 ForEach(activeTasks) { todo in
-                    TaskRow(todo: todo) {
-                        taskService.toggleCompleted(todo)
+                    NavigationLink(destination: todoDetail(for: todo)) {
+                        TaskRow(todo: todo) {
+                            taskService.toggleCompleted(todo)
+                        }
                     }
                 }
             }
@@ -58,8 +61,10 @@ struct TasksView: View {
 
                     if showCompleted {
                         ForEach(completedTasks) { todo in
-                            TaskRow(todo: todo) {
-                                taskService.toggleCompleted(todo)
+                            NavigationLink(destination: todoDetail(for: todo)) {
+                                TaskRow(todo: todo) {
+                                    taskService.toggleCompleted(todo)
+                                }
                             }
                         }
                     }
@@ -83,6 +88,15 @@ struct TasksView: View {
         .refreshable {
             taskService.fetchTodos()
         }
+    }
+
+    @ViewBuilder
+    private func todoDetail(for todo: VeritosTodo) -> some View {
+        TodoDetailView(
+            todo: todo,
+            onToggleComplete: { taskService.toggleCompleted(todo) },
+            onToggleSubtask: { subtask in taskService.toggleSubtask(todoId: todo.id, subtask: subtask) }
+        )
     }
 }
 
@@ -108,19 +122,22 @@ struct TaskRow: View {
                         Text(todo.urgencyLabel)
                             .font(.caption2)
                             .foregroundColor(.secondary)
-                        if let tags = todo.tags, !tags.isEmpty {
-                            Text(tags)
+                        if todo.totalSubtaskCount > 0 {
+                            Text("\(todo.completedSubtaskCount)/\(todo.totalSubtaskCount)")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal, 4)
-                                .padding(.vertical, 1)
-                                .background(Color.gray.opacity(0.15))
-                                .cornerRadius(4)
+                        }
+                        if let due = todo.formattedDueDate {
+                            Text("📅")
                         }
                     }
                 }
 
                 Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundColor(.secondary.opacity(0.5))
             }
         }
         .buttonStyle(.plain)
