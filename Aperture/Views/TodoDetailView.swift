@@ -138,9 +138,9 @@ struct TodoDetailView: View {
 
 // MARK: - Flow Layout for tags
 
-struct FlowLayout: View {
+struct FlowLayout<V: View>: View {
     let tags: [String]
-    let tagView: (String) -> some View
+    let tagView: (String) -> V
 
     var body: some View {
         let rows = computeRows()
