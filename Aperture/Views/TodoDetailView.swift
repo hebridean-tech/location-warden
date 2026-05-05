@@ -142,61 +142,28 @@ struct FlowLayout: View {
     let tags: [String]
     let tagView: (String) -> some View
 
-    @State private var totalHeight: CGFloat = 0
-
     var body: some View {
-        VStack(spacing: 6) {
-            GeometryReader { geo in
-                generateContent(in: geo.size)
+        let rows = computeRows()
+        VStack(alignment: .leading, spacing: 6) {
+            ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
+                HStack(spacing: 6) {
+                    ForEach(row, id: \.self) { tag in
+                        tagView(tag)
+                    }
+                }
             }
-            .frame(height: totalHeight)
         }
     }
 
-    private func generateContent(in size: CGSize) -> some View {
-        var x: CGFloat = 0
-        var y: CGFloat = 0
-        var rowHeight: CGFloat = 0
-
-        return ZStack(alignment: .topLeading) {
-            ForEach(Array(tags.enumerated()), id: \.offset) { _, tag in
-                tagView(tag)
-                    .alignmentGuide(.leading) { d in
-                        if abs(x - d.width) > size.width {
-                            x = 0
-                            y += rowHeight
-                            rowHeight = 0
-                        }
-                        let result = x
-                        if tag == tags.last {
-                            x = 0
-                        } else {
-                            x += d.width + 6
-                        }
-                        rowHeight = max(rowHeight, d.height)
-                        return result
-                    }
-                    .alignmentGuide(.top) { d in
-                        let result = y
-                        if tag == tags.last {
-                            y = 0
-                        }
-                        return result
-                    }
+    private func computeRows() -> [[String]] {
+        var rows: [[String]] = [[]]
+        for tag in tags {
+            if rows[rows.count - 1].count >= 3 {
+                rows.append([tag])
+            } else {
+                rows[rows.count - 1].append(tag)
             }
         }
-        .background(GeometryReader { geo in
-            Color.clear.preference(key: HeightKey.self, value: geo.size.height)
-        })
-        .onPreferenceChange(HeightKey.self) { h in
-            totalHeight = h
-        }
-    }
-}
-
-private struct HeightKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
+        return rows
     }
 }
