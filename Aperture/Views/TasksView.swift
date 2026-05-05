@@ -36,7 +36,9 @@ struct TasksView: View {
 
                 ForEach(activeTasks) { todo in
                     NavigationLink(destination: todoDetail(for: todo)) {
-                        TaskRow(todo: todo)
+                        TaskRow(todo: todo) {
+                            taskService.toggleCompleted(todo)
+                        }
                     }
                 }
             }
@@ -60,7 +62,9 @@ struct TasksView: View {
                     if showCompleted {
                         ForEach(completedTasks) { todo in
                             NavigationLink(destination: todoDetail(for: todo)) {
-                                TaskRow(todo: todo)
+                                TaskRow(todo: todo) {
+                                    taskService.toggleCompleted(todo)
+                                }
                             }
                         }
                     }
@@ -97,12 +101,16 @@ struct TasksView: View {
 
 struct TaskRow: View {
     let todo: VeritosTodo
+    var onToggle: (() -> Void)? = nil
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: todo.completed ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(todo.completed ? .green : .secondary)
-                .font(.title3)
+            Button(action: { onToggle?() }) {
+                Image(systemName: todo.completed ? "checkmark.circle.fill" : "circle")
+                    .foregroundColor(todo.completed ? .green : .secondary)
+                    .font(.title3)
+            }
+            .buttonStyle(.plain)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(todo.title)
