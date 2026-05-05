@@ -111,7 +111,7 @@ struct TaskRow: View {
                     .lineLimit(2)
 
                 HStack(spacing: 8) {
-                    Text(todo.urgencyColor)
+                    Text(todo.urgencyEmoji)
                     Text(todo.urgencyLabel)
                         .font(.caption2)
                         .foregroundColor(.secondary)
