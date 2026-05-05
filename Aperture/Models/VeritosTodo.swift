@@ -4,9 +4,18 @@ struct Subtask: Identifiable, Codable {
     let id: Int
     var title: String
     var completed: Bool
+    var targetCount: Int
+    var completedCount: Int
+    var position: Int?
+
+    var isIterative: Bool { targetCount > 1 }
+    var isFullyComplete: Bool { completedCount >= targetCount }
+    var progressText: String { "\(completedCount)/\(targetCount)" }
 
     enum CodingKeys: String, CodingKey {
-        case id, title, completed
+        case id, title, completed, position
+        case targetCount = "target_count"
+        case completedCount = "completed_count"
     }
 }
 
@@ -29,11 +38,11 @@ struct VeritosTodo: Identifiable, Codable {
         case 2: return "High"
         case 3: return "Normal"
         case 4: return "Low"
-        default: return "—"
+        default: return "\(urgency)"
         }
     }
 
-    var urgencyColor: String {
+    var urgencyEmoji: String {
         switch urgency {
         case 1: return "🔴"
         case 2: return "🟠"
@@ -44,22 +53,18 @@ struct VeritosTodo: Identifiable, Codable {
     }
 
     var completedSubtaskCount: Int {
-        subtasks?.filter(\.completed).count ?? 0
+        subtasks?.filter(\.isFullyComplete).count ?? 0
     }
 
     var totalSubtaskCount: Int {
         subtasks?.count ?? 0
     }
 
-    var hasProgress: Bool {
-        guard let subs = subtasks, !subs.isEmpty else { return false }
-        return subs.contains(where: { !$0.completed })
-    }
-
     var progressFraction: CGFloat {
-        guard let subs = subtasks, !subs.isEmpty else { return 0 }
-        let done = subs.filter(\.completed).count
-        return CGFloat(done) / CGFloat(subs.count)
+        guard let subs = subtasks, !subs.isEmpty else { return completed ? 1.0 : 0.0 }
+        let total = subs.reduce(0) { $0 + $1.targetCount }
+        let done = subs.reduce(0) { $0 + $1.completedCount }
+        return total > 0 ? CGFloat(done) / CGFloat(total) : 0
     }
 
     var formattedDueDate: String? {
@@ -72,7 +77,6 @@ struct VeritosTodo: Identifiable, Codable {
             display.timeStyle = .short
             return display.string(from: date)
         }
-        // Try without fractional seconds
         formatter.formatOptions = [.withInternetDateTime]
         if let date = formatter.date(from: dueStr) {
             let display = DateFormatter()
@@ -83,9 +87,23 @@ struct VeritosTodo: Identifiable, Codable {
         return dueStr
     }
 
+    var parsedDueDate: Date? {
+        guard let dueStr = dueAt, !dueStr.isEmpty else { return nil }
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let d = formatter.date(from: dueStr) { return d }
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter.date(from: dueStr)
+    }
+
     var tagList: [String] {
         guard let tags, !tags.isEmpty else { return [] }
         return tags.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+    }
+
+    var descriptionLines: [String] {
+        guard let desc = description, !desc.isEmpty else { return [] }
+        return desc.components(separatedBy: "\n")
     }
 
     enum CodingKeys: String, CodingKey {

@@ -89,9 +89,8 @@ struct TasksView: View {
     @ViewBuilder
     private func todoDetail(for todo: VeritosTodo) -> some View {
         TodoDetailView(
-            todo: todo,
-            onToggleComplete: { taskService.toggleCompleted(todo) },
-            onToggleSubtask: { subtask in taskService.toggleSubtask(todoId: todo.id, subtask: subtask) }
+            taskService: taskService,
+            todo: todo
         )
     }
 }
