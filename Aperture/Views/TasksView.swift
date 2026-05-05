@@ -36,9 +36,7 @@ struct TasksView: View {
 
                 ForEach(activeTasks) { todo in
                     NavigationLink(destination: todoDetail(for: todo)) {
-                        TaskRow(todo: todo) {
-                            taskService.toggleCompleted(todo)
-                        }
+                        TaskRow(todo: todo)
                     }
                 }
             }
@@ -62,9 +60,7 @@ struct TasksView: View {
                     if showCompleted {
                         ForEach(completedTasks) { todo in
                             NavigationLink(destination: todoDetail(for: todo)) {
-                                TaskRow(todo: todo) {
-                                    taskService.toggleCompleted(todo)
-                                }
+                                TaskRow(todo: todo)
                             }
                         }
                     }
@@ -102,44 +98,40 @@ struct TasksView: View {
 
 struct TaskRow: View {
     let todo: VeritosTodo
-    let onToggle: () -> Void
 
     var body: some View {
-        Button(action: onToggle) {
-            HStack(spacing: 12) {
-                Image(systemName: todo.completed ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(todo.completed ? .green : .secondary)
-                    .font(.title3)
+        HStack(spacing: 12) {
+            Image(systemName: todo.completed ? "checkmark.circle.fill" : "circle")
+                .foregroundColor(todo.completed ? .green : .secondary)
+                .font(.title3)
 
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(todo.title)
-                        .foregroundColor(todo.completed ? .secondary : .primary)
-                        .strikethrough(todo.completed)
-                        .lineLimit(2)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(todo.title)
+                    .foregroundColor(todo.completed ? .secondary : .primary)
+                    .strikethrough(todo.completed)
+                    .lineLimit(2)
 
-                    HStack(spacing: 8) {
-                        Text(todo.urgencyColor)
-                        Text(todo.urgencyLabel)
+                HStack(spacing: 8) {
+                    Text(todo.urgencyColor)
+                    Text(todo.urgencyLabel)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                    if todo.totalSubtaskCount > 0 {
+                        Text("\(todo.completedSubtaskCount)/\(todo.totalSubtaskCount)")
                             .font(.caption2)
                             .foregroundColor(.secondary)
-                        if todo.totalSubtaskCount > 0 {
-                            Text("\(todo.completedSubtaskCount)/\(todo.totalSubtaskCount)")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-                        if let due = todo.formattedDueDate {
-                            Text("📅")
-                        }
+                    }
+                    if let due = todo.formattedDueDate {
+                        Text("📅")
                     }
                 }
-
-                Spacer()
-
-                Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundColor(.secondary.opacity(0.5))
             }
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundColor(.secondary.opacity(0.5))
         }
-        .buttonStyle(.plain)
     }
 }
